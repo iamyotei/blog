@@ -9,9 +9,9 @@ interface PostItemProps {
 
 export function PostLast({ post }: PostItemProps) {
     return (
-        <>
+          <article className="mb-9">
             <Link href={`/blog/${post.slug}`}>
-                <div className="grid gap-x-8 grid-cols-2 mb-14 items-center">
+                <div className="grid gap-x-8 grid-cols-2 items-center">
 
                     <div className="rounded-xl">
                         <Image
@@ -32,8 +32,10 @@ export function PostLast({ post }: PostItemProps) {
 
 
                 </div>
+               
             </Link>
-        </>
+             </article>
+    
     );
 }
 
