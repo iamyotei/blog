@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { Title } from "@/components/main/page-title";
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Suspense } from 'react';
+import 'highlight.js/styles/github-dark.css'; // или 'atom-one-dark.css', 'vs2015.css' и т.д.
+import { BSLCodeBlock } from "@/app/lib/BSLCodeBlock";
 
 // Генерация статических путей
 export async function generateStaticParams() {
@@ -107,22 +109,44 @@ export default async function PagePost({ params }: { params: Promise<{ slug: str
         {/* Содержимое MDX */}
         <div className="">
           <Suspense fallback={<div>Загрузка содержимого...</div>}>
-            {/* <MDXRemote source={post.content} /> */}
             <MDXRemote
               source={post.content}
               components={{
-                h1: (props) => <h1 className="mt-20 mb-5 text-2xl font-bold" {...props} />, // заголовок первого уровня
-                h2: (props) => <h2 className="mt-10 mb-4 text-xl font-bold" {...props} />,
-                h3: (props) => <h3 className="" {...props} />,
-                h4: (props) => <h4 className="" {...props} />,
-                h5: (props) => <h5 className="" {...props} />,
-                h6: (props) => <h6 className="" {...props} />,
-                p: (props) => <p className="mt-5 mb-4 text-base" {...props} />,
-                strong: (props) => <strong className="" {...props} />,
-                ul: (props) => <ul className="mt-5 mb-5 pl-6" {...props} />,
-                li: (props) => <li className="" {...props} />,
-                code: (props) => <code className="" {...props} />,
-                img: (props) => <img className="" {...props} />,
+                // ... другие компоненты
+                
+                // Используем BSLCodeBlock для блоков кода
+                pre: (props) => {
+                  // Получаем children (обычно это code элемент)
+                  const childProps = props.children?.props;
+                  
+                  // Проверяем, содержит ли className language-bsl или language-1c
+                  if (childProps?.className?.includes('language-bsl') || 
+                      childProps?.className?.includes('language-1c')) {
+                    return <BSLCodeBlock {...childProps} />;
+                  }
+                  
+                  // Для других языков используем стандартный pre
+                  return (
+                    <pre className="" {...props}>
+                      {props.children}
+                    </pre>
+                  );
+                },
+                
+                // Для инлайн-кода
+                code: (props) => {
+                  // Если это блок кода с языком, возвращаем просто children (обработается в pre)
+                  if (props.className?.includes('language-')) {
+                    return <code {...props} />;
+                  }
+                  
+                  // Для инлайн-кода
+                  return (
+                    <code className="bg-gray-100 rounded px-1 py-0.5 text-sm" {...props} />
+                  );
+                },
+                
+                // ... остальные компоненты
               }}
             />
           </Suspense>
@@ -131,4 +155,3 @@ export default async function PagePost({ params }: { params: Promise<{ slug: str
     </Container>
   );
 }
-
