@@ -33,7 +33,7 @@ export default function PageBlog() {
       <Title className="mb-8">Размышления о продукте, маркетинге и разработке.</Title>
 
 
-      <div className="flex items-center w-full gap-4 mb-8">
+      <div className="flex items-center w-full gap-4 mb-9">
         <p className="text-neutral-600 text-sm font-semibold uppercase">Новый</p>
         <Separator />
       </div>

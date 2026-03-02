@@ -1,22 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/main/header";
 import Footer from "@/components/main/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  // subsets: ["latin"],
-});
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   // subsets: ["latin"],
-// });
-
-const interSans = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+  subsets: ["cyrillic"],
 });
 
 export const metadata: Metadata = {
@@ -42,10 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
-      <body
-        className={`${geistSans.variable} ${interSans.variable} antialiased font-sans`}
-      >
+    <html lang="ru" className="h-full">
+      <body className={`${geistSans.variable} antialiased font-sans h-full grid grid-rows-[auto_1fr_auto]`} >
         <Header />
         <main>
           {children}
@@ -55,3 +43,9 @@ export default function RootLayout({
     </html>
   );
 }
+
+// export function Naim() {
+//     return (
+
+//     )
+// }

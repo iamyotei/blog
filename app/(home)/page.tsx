@@ -5,9 +5,7 @@ import { Title } from "@/components/main/page-title";
 import { Descr } from "@/components/main/page-descr";
 import { getNumberPosts } from "../lib/get-posts";
 import { Blocks, BookCheck, GitPullRequestCreateArrow } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Image from 'next/image';
-import Footer from "@/components/main/footer";
 
 export const metadata: Metadata = {
   title: 'Главная',
@@ -16,7 +14,6 @@ export const metadata: Metadata = {
 
 export default function Home() {
   const posts = getNumberPosts(3);
-  console.log('несколько постов', posts)
 
   return (
     <Container>
@@ -65,7 +62,7 @@ export default function Home() {
         </div>
       </section>
 
-   
+
     </Container>
   );
 }

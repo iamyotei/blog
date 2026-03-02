@@ -7,6 +7,7 @@ interface PostItemProps {
 }
 
 export function PostItem({ post }: PostItemProps) {
+    
     return (
         <article>
             <Link href={`/blog/${post.slug}`}>

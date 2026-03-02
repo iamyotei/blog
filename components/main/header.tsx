@@ -6,8 +6,9 @@ import { PAGES } from "@/app/lib/pages.config";
 
 export function Header() {
   return (
-    <Container>
-      <header className="pt-12 pb-18">
+
+      <header className="pt-12 pb-18 w-full">
+            <Container>
         <div className="flex items-center justify-between">
 
           <Link href={PAGES.HOME}>Vadim Sokolov</Link>
@@ -15,7 +16,7 @@ export function Header() {
           <Nav />
 
         </div>
+        </Container>
       </header>
-    </Container>
   );
 }

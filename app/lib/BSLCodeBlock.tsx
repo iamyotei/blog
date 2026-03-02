@@ -34,7 +34,7 @@ export function BSLCodeBlock({ className, children, ...props }: BSLCodeBlockProp
           // padding: '3rem 1rem 1rem 1rem',
           // borderRadius: '0 0 0.5rem 0.5rem',
           fontSize: '0.8rem',
-          fontFamily: 'geistSans.variable',
+          // fontFamily: 'font-sans',
         }}
         showLineNumbers={false}
         wrapLines={false}
