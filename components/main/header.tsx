@@ -10,7 +10,7 @@ export function Header() {
       <header className="pt-12 pb-18">
         <div className="flex items-center justify-between">
 
-          <Link href={PAGES.HOME}>VV-SS</Link>
+          <Link href={PAGES.HOME}>Vadim Sokolov</Link>
 
           <Nav />
 

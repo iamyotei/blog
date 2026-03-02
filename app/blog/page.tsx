@@ -7,22 +7,25 @@ import { PostLast } from "@/components/main/post-last";
 import { Descr } from "@/components/main/page-descr";
 import { Title } from "@/components/main/page-title";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
+import { notFound } from "next/navigation";
+import { getAllPostsPreviews } from "../lib/get-posts";
 
 export const metadata: Metadata = {
   title: 'Блог',
   description: 'Страница блога',
 };
 
-export default function PageBlog() {
-  const post = getLatestPost();
-  const postsAll = getOtherPosts();
 
-  if (!post) {
-    return (
-      <p>Пост undefined</p>
-    );
+export default function PageBlog() {
+  const allPosts = getAllPostsPreviews();
+
+  if (!allPosts || allPosts.length === 0) {
+    notFound();
   }
+
+  const latestPost = allPosts[0]; // Берем первый (самый новый) пост для блока "Новый"
+  const otherPosts = allPosts.slice(1); // Остальные посты (все кроме первого)
+
   return (
 
     <Container>
@@ -31,19 +34,19 @@ export default function PageBlog() {
 
 
       <div className="flex items-center w-full gap-4 mb-8">
-        <Badge className="bg-red-50 text-red-600 dark:bg-red-950 dark:text-red-300">Новый</Badge>
+        <p className="text-neutral-600 text-sm font-semibold uppercase">Новый</p>
         <Separator />
       </div>
 
-      <PostLast key={post.slug} post={post} />
+      <PostLast key={latestPost.slug} post={latestPost} />
 
       <div className="flex items-center w-full gap-4 mb-14">
-        <Badge className="bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-300">Остальные посты</Badge>
+        <p className="text-neutral-600 text-sm font-semibold uppercase">Последние</p>
         <Separator />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20 mb-14">
-        {postsAll.map((post) => (
+        {otherPosts.map((post) => (
           <PostItem key={post.slug} post={post} />
         ))}
       </div>
