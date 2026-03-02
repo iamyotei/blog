@@ -1,6 +1,6 @@
 media:
-  input: public/assets
-  output: /assets
+  input: public/img-posts
+  output: /img-posts
   categories: [ "image" ]
 content:
   - name: posts
@@ -23,12 +23,6 @@ content:
         options:
           multiple: true
           values: [ Запросы, СКД, Формы ]
-      - name: author
-        label: Author
-        type: object
-        fields:
-          - { name: name, label: Name, type: string }
-          - { name: picture, label: Picture, type: image }
       - name: ogImage
         label: Image (social sharing)
         type: object
