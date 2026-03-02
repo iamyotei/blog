@@ -1,23 +1,27 @@
-// app/blog/[slug]/page.tsx
 import { Container } from "@/components/main/container";
 import { Metadata } from "next";
-import { getPostBySlug, getAllPosts } from "@/app/lib/posts";
+import { getPostBySlug, getAllPosts } from "@/app/lib/get-posts";
 import { notFound } from "next/navigation";
 import Image from 'next/image';
 import { Title } from "@/components/main/page-title";
-import { Descr } from "@/components/main/page-descr";
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { Suspense } from 'react';
 
-// generateStaticParams не требует изменений (params здесь автоматически разрешается)
+// Генерация статических путей
 export async function generateStaticParams() {
   const posts = getAllPosts();
+
   return posts.map((post) => ({
     slug: post.slug,
   }));
 }
 
+// Генерация метаданных
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+
   const post = getPostBySlug(slug);
+  console.log('post', post)
 
   if (!post) {
     return {
@@ -28,9 +32,26 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: post.title,
     description: post.descr,
+    openGraph: {
+      title: post.title,
+      description: post.descr,
+      url: `https://vadimsokolov.ru/blog/${slug}`,
+      images: [
+        {
+          url: post.cover.startsWith('/') ? `https://vadimsokolov.ru${post.cover}` : post.cover,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      type: 'article',
+      publishedTime: post.create,
+      modifiedTime: post.update,
+    },
   };
 }
 
+// Основной компонент страницы
 export default async function PagePost({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
@@ -41,47 +62,73 @@ export default async function PagePost({ params }: { params: Promise<{ slug: str
 
   return (
     <Container>
-      <section>
-        <Title className="mb-8">{post.title}</Title>
+      <article className="">
+        {/* Заголовок */}
+        <Title className="mb-4">{post.title}</Title>
 
-        <div className="flex mb-8 gap-12">
+        {/* Описание (если есть) */}
+        {post.descr && (
+          <p className="text-xl text-gray-600 mb-8">{post.descr}</p>
+        )}
 
+        {/* Мета-информация */}
+        <div className="flex mb-8 gap-12 border-b pb-6">
           <div className="flex flex-col">
             <p className="text-gray-500 text-xs leading-6">Опубликовано</p>
-            <time className="text-sm font-medium text-gray-700" dateTime={post.create}>{post.create}</time>
+            <time className="text-sm font-medium text-gray-700" dateTime={post.create}>
+              {post.createFormatted || post.create}
+            </time>
           </div>
 
           {post.update !== post.create && (
             <div className="flex flex-col">
               <p className="text-gray-500 text-xs leading-6">Обновлено</p>
-              <time  className="text-sm font-medium text-gray-700">{post.update}</time>
+              <time className="text-sm font-medium text-gray-700" dateTime={post.update}>
+                {post.updateFormatted || post.update}
+              </time>
             </div>
           )}
-
         </div>
 
-        <div className="rounded-xl">
-          <Image
-            src={post.cover}
-            alt={post.title}
-            width={864}
-            height={451}
-            className="rounded-xl mb-10"
-            priority
-          />
-        </div>
-
-        {/* <div className="">
-          <p className="">{post.descr}</p>
-          <div className="">
-            <h2 className="">Подробнее о {post.title}</h2>
-            <p>
-              Полное содержание поста. В реальном проекте здесь может быть Markdown,
-              JSON или контент из CMS.
-            </p>
+        {/* Обложка (если есть) */}
+        {post.cover && (
+          <div className="rounded-xl mb-10">
+            <Image
+              src={post.cover.startsWith('/') ? post.cover : `/${post.cover}`}
+              alt={post.title}
+              width={864}
+              height={451}
+              className="rounded-xl w-full h-auto"
+              priority
+            />
           </div>
-        </div> */}
-      </section>
+        )}
+
+        {/* Содержимое MDX */}
+        <div className="">
+          <Suspense fallback={<div>Загрузка содержимого...</div>}>
+            {/* <MDXRemote source={post.content} /> */}
+            <MDXRemote
+              source={post.content}
+              components={{
+                h1: (props) => <h1 className="mt-20 mb-5 text-2xl font-bold" {...props} />, // заголовок первого уровня
+                h2: (props) => <h2 className="mt-10 mb-4 text-xl font-bold" {...props} />,
+                h3: (props) => <h3 className="" {...props} />,
+                h4: (props) => <h4 className="" {...props} />,
+                h5: (props) => <h5 className="" {...props} />,
+                h6: (props) => <h6 className="" {...props} />,
+                p: (props) => <p className="mt-5 mb-4 text-base" {...props} />,
+                strong: (props) => <strong className="" {...props} />,
+                ul: (props) => <ul className="mt-5 mb-5 pl-6" {...props} />,
+                li: (props) => <li className="" {...props} />,
+                code: (props) => <code className="" {...props} />,
+                img: (props) => <img className="" {...props} />,
+              }}
+            />
+          </Suspense>
+        </div>
+      </article>
     </Container>
   );
 }
+

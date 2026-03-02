@@ -1,10 +1,10 @@
 import Link from "next/link";
 import Image from 'next/image';
-import { Post } from "@/app/lib/interfaces";
+import { Post, PostPreview } from "@/app/lib/interfaces";
 import { Descr } from "./page-descr";
 
 interface PostItemProps {
-    post: Post;
+    post: PostPreview;
 }
 
 export function PostLast({ post }: PostItemProps) {
@@ -24,7 +24,7 @@ export function PostLast({ post }: PostItemProps) {
                     </div>
                     <div className="">
                         <div>
-                            <p className="text-xs mt-3 gap-x-4 text-gray-600">{post.create}</p>
+                            <p className="text-xs mt-3 gap-x-4 text-gray-600">{post.createFormatted}</p>
                         </div>
                         <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-3">{post.title}</h2>
                         <Descr>{post.descr}</Descr>
