@@ -3,20 +3,28 @@ import { Button } from "../ui/button";
 import { Container } from "./container";
 import { Nav } from "./nav";
 import { PAGES } from "@/app/lib/pages.config";
+import { Separator } from "../ui/separator";
 
 export function Header() {
   return (
 
-      <header className="pt-12 pb-18 w-full">
-            <Container>
+    <header className="pt-12 pb-18 w-full">
+      <Container>
         <div className="flex items-center justify-between">
-
           <Link href={PAGES.HOME}>Vadim Sokolov</Link>
-
           <Nav />
-
         </div>
-        </Container>
-      </header>
+      </Container>
+    </header>
+
+    // <header className="mb-20">
+    //   <Container>
+    //     <div className="flex items-center justify-between py-5">
+    //       <Link href={PAGES.HOME}>Vadim Sokolov</Link>
+    //       <Nav />
+    //     </div>
+    //   </Container>
+    // </header>
+
   );
 }
